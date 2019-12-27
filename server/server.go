@@ -33,9 +33,14 @@ func New(cfg *config.Config) (*Server, error) {
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	authenticationHeader := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
+	if len(authenticationHeader) != 2 {
+		writeError(w, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
 
 	if authenticationHeader[0] != "Bearer" {
 		writeError(w, http.StatusUnauthorized, "Unauthorized")
+		return
 	}
 
 	jwtToken := authenticationHeader[1]
@@ -45,7 +50,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if claim.Product == s.ProductID {
+	if claim.Product != s.ProductID {
 		writeError(w, http.StatusForbidden, "Forbidden")
 		return
 	}
