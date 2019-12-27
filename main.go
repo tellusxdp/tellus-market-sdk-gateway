@@ -35,7 +35,10 @@ func serve(c *cli.Context) error {
 		return err
 	}
 
-	s := server.New(cfg)
+	s, err := server.New(cfg)
+	if err != nil {
+		return err
+	}
 
 	log.Infof("Listen on %s", cfg.ListenAddress)
 	err = http.ListenAndServe(cfg.ListenAddress, s)

@@ -15,6 +15,19 @@ import (
 
 var publicKeys map[string]string = map[string]string{}
 
+type TokenError struct {
+	Status  int
+	Message string
+}
+
+func (e TokenError) Error() string {
+	return e.Message
+}
+
+func NewTokenError(status int, message string) TokenError {
+	return TokenError{status, message}
+}
+
 func updatePublicKeys(url string) error {
 	log.Debugf("Download public keys from %s", url)
 
