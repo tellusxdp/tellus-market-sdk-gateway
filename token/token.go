@@ -58,7 +58,10 @@ func updatePublicKeys(url string) error {
 }
 
 func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error) {
-	updatePublicKeys(publicKeysURL)
+	err := updatePublicKeys(publicKeysURL)
+	if err != nil {
+		log.Errorf("updatePunlicKeys() error: %s", err.Error())
+	}
 
 	parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// check signing method

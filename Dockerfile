@@ -13,7 +13,8 @@ RUN go build main.go
 # Image
 FROM scratch
 
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /go/src/github.com/tellusxdp/tellus-market-sdk-gateway/main /opt/bin/market-gateway
-CMD ["/opt/bin/market-gateway", "/opt/market/config.yml"]
+CMD ["/opt/bin/market-gateway", "--config", "/opt/market/config.yml"]
 
 EXPOSE 8000

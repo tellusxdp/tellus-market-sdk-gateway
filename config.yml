@@ -1,4 +1,4 @@
-listen_address: 127.0.0.1:8000
+listen_address: 0.0.0.0:8000
 
 private_key_url: https://sdk.tellusxdp-staging.com/api/manager/v1/auth/public_keys
 upstream: http://www.amemil.jp

@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strings"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/tellusxdp/tellus-market-sdk-gateway/config"
 	"github.com/tellusxdp/tellus-market-sdk-gateway/token"
 )
@@ -14,6 +16,7 @@ type Server struct {
 	PrivateKeyURL string
 	Upstream      *url.URL
 	ToolID        string
+	Logger        *log.Entry
 }
 
 func New(cfg *config.Config) (*Server, error) {
@@ -26,6 +29,7 @@ func New(cfg *config.Config) (*Server, error) {
 		PrivateKeyURL: cfg.PrivateKeyURL,
 		Upstream:      u,
 		ToolID:        cfg.ToolID,
+		Logger:        log.WithField("tool_id", cfg.ToolID),
 	}
 	return s, nil
 }
@@ -34,19 +38,20 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	authenticationHeader := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 	if len(authenticationHeader) != 2 {
-		writeError(w, http.StatusUnauthorized, "Unauthorized")
+		writeError(w, http.StatusUnauthorized, "Unauthorized (missing)")
 		return
 	}
 
 	if authenticationHeader[0] != "Bearer" {
-		writeError(w, http.StatusUnauthorized, "Unauthorized")
+		writeError(w, http.StatusUnauthorized, "Unauthorized (unknown type)")
 		return
 	}
 
 	jwtToken := authenticationHeader[1]
 	claim, err := token.ValidateToken(jwtToken, s.PrivateKeyURL)
 	if err != nil {
-		writeError(w, http.StatusUnauthorized, "Unauthorized")
+		s.Logger.Warn(err.Error())
+		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid)")
 		return
 	}
 
