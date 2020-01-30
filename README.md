@@ -31,3 +31,19 @@ cd tellus-market-sdk-gateway
 vi config.yml
 go run main.go
 ```
+
+
+## Docker
+
+### Build Image
+
+```bash
+docker build -t tellusxdp/market-sdk-gateway:latest .
+docker push tellusxdp/market-sdk-gateway:latest
+```
+
+### Using Image
+
+```bash
+docker run -it -p 8000:8000 -v `pwd`:/opt/market tellusxdp/market-sdk-gateway:latest
+```
