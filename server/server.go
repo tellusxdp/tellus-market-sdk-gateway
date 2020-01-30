@@ -13,7 +13,7 @@ import (
 type Server struct {
 	PrivateKeyURL string
 	Upstream      *url.URL
-	ProductID     string
+	ToolID        string
 }
 
 func New(cfg *config.Config) (*Server, error) {
@@ -25,7 +25,7 @@ func New(cfg *config.Config) (*Server, error) {
 	s := &Server{
 		PrivateKeyURL: cfg.PrivateKeyURL,
 		Upstream:      u,
-		ProductID:     cfg.ProductID,
+		ToolID:        cfg.ToolID,
 	}
 	return s, nil
 }
@@ -50,7 +50,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if claim.Product != s.ProductID {
+	if claim.ToolID != s.ToolID {
 		writeError(w, http.StatusForbidden, "Forbidden")
 		return
 	}

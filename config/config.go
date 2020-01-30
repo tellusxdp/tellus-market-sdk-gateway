@@ -10,7 +10,9 @@ type Config struct {
 	ListenAddress string `yaml:"listen_address"`
 	PrivateKeyURL string `yaml:"private_key_url"`
 	Upstream      string `yaml:"upstream"`
-	ProductID     string `yaml:"product"`
+	ProviderName  string `yaml:"provider_name"`
+	ToolLabel     string `yaml:"tool_label"`
+	ToolID        string `yaml:"tool_id"`
 }
 
 func FromFilepath(path string) (*Config, error) {

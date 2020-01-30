@@ -13,9 +13,11 @@ config.ymlにて以下の項目を設定します
 |                 | 意味                      | 例                                                   |
 | --------------- | ----------------------- | --------------------------------------------------- |
 | listen_address  | Listenするアドレス            | 127.0.0.1:8000                                      |
-| private_key_url | JWTを検証する公開鍵をダウンロードするURL | https://www.tellusxdp.com/market/api/v1/public_keys |
+| private_key_url | JWTを検証する公開鍵をダウンロードするURL | https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys |
 | upstream        | 認証後に接続するサーバ             | https://www.example.com/                            |
-| product         | 商品ID                    | product01                                           |
+| provider_name   | プロバイダ名                    | provider-a                                           |
+| tool_id         | 商品ID                    | 1_9ffc0bb13148c605795b5bc22143b7b00c30ad            |
+| tool_label      | 商品ラベル                 | product01                                           |
 
 
 
