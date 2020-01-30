@@ -14,6 +14,8 @@ import (
 
 type Server struct {
 	PrivateKeyURL string
+	CounterURL    string
+	APIKey        string
 	Upstream      *url.URL
 	ToolID        string
 	Logger        *log.Entry
@@ -27,6 +29,8 @@ func New(cfg *config.Config) (*Server, error) {
 
 	s := &Server{
 		PrivateKeyURL: cfg.PrivateKeyURL,
+		CounterURL:    cfg.CounterURL,
+		APIKey:        cfg.APIKey,
 		Upstream:      u,
 		ToolID:        cfg.ToolID,
 		Logger:        log.WithField("tool_id", cfg.ToolID),
@@ -67,5 +71,22 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rp := &httputil.ReverseProxy{Director: director}
-	rp.ServeHTTP(w, r)
+	lw := NewLoggingResponseWriter(w)
+	rp.ServeHTTP(lw, r)
+
+	if 200 <= lw.StatusCode && lw.StatusCode <= 299 {
+		// 有効なレスポンス
+		go func() {
+			c := CountRequest{
+				ToolID:    s.ToolID,
+				UserID:    claim.Subject,
+				Token:     jwtToken,
+				RequestID: "dummy",
+			}
+			err := s.Count(c)
+			if err != nil {
+				s.Logger.Errorf("Count request error: %s", err.Error())
+			}
+		}()
+	}
 }

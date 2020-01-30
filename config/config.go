@@ -9,6 +9,8 @@ import (
 type Config struct {
 	ListenAddress string `yaml:"listen_address"`
 	PrivateKeyURL string `yaml:"private_key_url"`
+	CounterURL    string `yaml:"counter_url"`
+	APIKey        string `yaml:"api_key"`
 	Upstream      string `yaml:"upstream"`
 	ProviderName  string `yaml:"provider_name"`
 	ToolLabel     string `yaml:"tool_label"`
