@@ -58,11 +58,6 @@ func updatePublicKeys(url string) error {
 }
 
 func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error) {
-	err := updatePublicKeys(publicKeysURL)
-	if err != nil {
-		log.Errorf("updatePunlicKeys() error: %s", err.Error())
-	}
-
 	parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// check signing method
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
@@ -80,7 +75,15 @@ func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error
 		}
 		publicKeyStr, ok := publicKeys[kidStr]
 		if !ok {
-			return nil, fmt.Errorf("Unknown kid %s", kidStr)
+			err := updatePublicKeys(publicKeysURL)
+			if err != nil {
+				return nil, fmt.Errorf("updatePunlicKeys() error: %s", err.Error())
+			}
+
+			publicKeyStr, ok = publicKeys[kidStr]
+			if !ok {
+				return nil, fmt.Errorf("Unknown kid %s", kidStr)
+			}
 		}
 
 		publicKeyBlock, _ := pem.Decode([]byte(publicKeyStr))
