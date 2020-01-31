@@ -48,6 +48,26 @@ func New(cfg *config.Config) (*Server, error) {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	originHeader := r.Header.Get("Origin")
+
+	if originHeader != "" {
+		// Allow Origin
+		w.Header().Set("Access-Control-Allow-Origin", originHeader)
+
+		if r.Method == "OPTIONS" {
+			// preflight
+			// Access-Control-Request-Headersが含まれていた場合はpreflight成功
+			if r.Header.Get("Access-Control-Request-Headers") != "" {
+				w.Header().Set("Access-Control-Max-Age", "600")
+				w.Header().Set("Access-Control-Allow-Credentials", "false")
+				w.Header().Set("Access-Control-Allow-Headers", r.Header.Get("Access-Control-Request-Headers"))
+				w.Header().Set("Access-Control-Allow-Methods", r.Header.Get("Access-Control-Request-Method"))
+				w.WriteHeader(204)
+				return
+			}
+		}
+	}
+
 	authenticationHeader := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 	if len(authenticationHeader) != 2 {
 		writeError(w, http.StatusUnauthorized, "Unauthorized (missing)")
