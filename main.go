@@ -22,6 +22,8 @@ func main() {
 		},
 	}
 
+	log.SetLevel(log.DebugLevel)
+
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

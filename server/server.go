@@ -25,6 +25,7 @@ type Server struct {
 	Upstream      *url.URL
 	ToolID        string
 	Logger        *log.Entry
+	CounterChan   chan<- CountRequest
 }
 
 func New(cfg *config.Config) (*Server, error) {
@@ -41,6 +42,7 @@ func New(cfg *config.Config) (*Server, error) {
 		ToolID:        cfg.ToolID,
 		Logger:        log.WithField("tool_id", cfg.ToolID),
 	}
+	s.CounterChan = s.StartCountRequestLoop()
 	return s, nil
 }
 
@@ -99,10 +101,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				Token:     jwtToken,
 				RequestID: requestID,
 			}
-			err := s.Count(c)
-			if err != nil {
-				s.Logger.Errorf("Count request error: %s", err.Error())
-			}
+			s.CounterChan <- c
 		}()
 	}
 }

@@ -15,7 +15,24 @@ type CountRequest struct {
 	RequestID string `json:"request_id"`
 }
 
-func (s *Server) Count(r CountRequest) error {
+func (s *Server) StartCountRequestLoop() chan<- CountRequest {
+	c := make(chan CountRequest, 100)
+
+	go func(c <-chan CountRequest) {
+		for {
+			r := <-c
+			s.Logger.Debugf("Request count: %s", r.RequestID)
+			err := s.count(r)
+			if err != nil {
+				s.Logger.Errorf("Count request error: %s", err.Error())
+			}
+		}
+	}(c)
+
+	return c
+}
+
+func (s *Server) count(r CountRequest) error {
 	body, _ := json.Marshal(&r)
 
 	req, err := http.NewRequest("POST", s.CounterURL, bytes.NewReader(body))
