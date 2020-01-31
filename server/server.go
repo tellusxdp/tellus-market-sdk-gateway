@@ -6,10 +6,16 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/tellusxdp/tellus-market-sdk-gateway/config"
 	"github.com/tellusxdp/tellus-market-sdk-gateway/token"
+)
+
+const (
+	HEADER_USER      = "X-Tellus-Market-User"
+	HEADER_REQUESTID = "X-Tellus-Market-RequestID"
 )
 
 type Server struct {
@@ -64,10 +70,20 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	requestID := r.Header.Get(HEADER_REQUESTID)
+	if requestID == "" {
+		u, err := uuid.NewRandom()
+		if err != nil {
+			log.Errorf("Cannot generate UUID: %s", err.Error())
+		}
+		requestID = u.String()
+	}
+
 	director := func(req *http.Request) {
 		req.URL.Scheme = s.Upstream.Scheme
 		req.URL.Host = s.Upstream.Host
-		req.Header.Set("X-Tellus-Market-User", claim.Subject)
+		req.Header.Set(HEADER_USER, claim.Subject)
+		req.Header.Set(HEADER_REQUESTID, requestID)
 	}
 
 	rp := &httputil.ReverseProxy{Director: director}
@@ -81,7 +97,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				ToolID:    s.ToolID,
 				UserID:    claim.Subject,
 				Token:     jwtToken,
-				RequestID: "dummy",
+				RequestID: requestID,
 			}
 			err := s.Count(c)
 			if err != nil {
