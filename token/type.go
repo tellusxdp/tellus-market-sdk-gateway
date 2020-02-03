@@ -7,5 +7,5 @@ type JWTPayload struct {
 	ID       string `json:"jti,omitempty"`
 	Issuer   string `json:"iss,omitempty"`
 	Subject  string `json:"sub,omitempty"`
-	ToolID   string `json:"product"`
+	ToolID   string `json:"tool_id"`
 }
