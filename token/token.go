@@ -120,7 +120,7 @@ func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error
 		ID:       claims["jti"].(string),
 		Issuer:   claims["iss"].(string),
 		Subject:  claims["sub"].(string),
-		ToolID:   claims["product"].(string),
+		ToolID:   claims["tool_id"].(string),
 	}
 	return t, nil
 }
