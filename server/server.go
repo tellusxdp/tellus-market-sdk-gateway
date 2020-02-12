@@ -146,13 +146,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	jwtToken := authenticationHeader[1]
 	claim, err := token.ValidateToken(jwtToken, s.Config.PrivateKeyURL)
 	if err != nil {
-		s.Logger.Warn(err.Error())
-		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid)")
+		s.Logger.Debugf("Invalid token: %s", err.Error())
+		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid signature)")
 		return
 	}
 
 	if claim.ToolID != s.Config.ToolID {
-		writeError(w, http.StatusForbidden, "Forbidden")
+		s.Logger.Debugf("Invalid tool id %s", claim.ToolID)
+		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid tool)")
 		return
 	}
 
