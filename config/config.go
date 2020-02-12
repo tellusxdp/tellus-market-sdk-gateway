@@ -52,7 +52,7 @@ func FromFilepath(path string) (*Config, error) {
 		c.Upstream.Headers = map[string]string{}
 	}
 
-	if c.HTTP.TLS.Autocert == nil {
+	if c.HTTP.TLS != nil && c.HTTP.TLS.Autocert == nil {
 		c.HTTP.TLS.Autocert = &Autocert{Enabled: false}
 	}
 

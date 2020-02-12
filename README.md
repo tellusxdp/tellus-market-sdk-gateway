@@ -27,6 +27,32 @@ config.ymlにて以下の項目を設定します
 
 
 
+### Example
+
+```yaml
+http:
+  listen_address: 0.0.0.0:443
+  tls:
+    autocert:
+      enabled: true
+      cache_dir: /opt/market/autocert
+
+upstream:
+  url: http://www.example.com
+  headers:
+    Authorization: "Basic Zm9vOmJhcg=="
+
+private_key_url: https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys
+counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
+api_key: b424a335-ea26-4ff1-bdf8-168469778499
+
+provider_name: acmeinc
+tool_label: owesome-api
+tool_id: 1_e849acf73765b19fd700af9374ab0fa2
+```
+
+
+
 ## Getting started
 
 ```bash

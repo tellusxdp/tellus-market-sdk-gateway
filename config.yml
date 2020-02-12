@@ -1,7 +1,5 @@
 http:
   listen_address: 0.0.0.0:8000
-  tls:
-    autocert: true
 
 private_key_url: https://sdk.tellusxdp-staging.com/api/manager/v1/auth/public_keys
 counter_url: https://sdk.tellusxdp-staging.com/api/manager/v1/items/counts
