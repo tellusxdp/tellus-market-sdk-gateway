@@ -6,13 +6,22 @@ import (
 	"github.com/go-yaml/yaml"
 )
 
+type HTTP struct {
+	ListenAddress string `yaml:"listen_address"`
+	TLS           *struct {
+		Autocert    bool   `yaml:"autocert"`
+		Certificate string `yaml:"certificate,omitempty"`
+		Key         string `yaml:"key,omitempty"`
+	} `yaml:"tls,omitempty"`
+}
+
 type Upstream struct {
 	URL     string            `yaml:"url"`
 	Headers map[string]string `yaml:"headers"`
 }
 
 type Config struct {
-	ListenAddress string   `yaml:"listen_address"`
+	HTTP          HTTP     `yaml:"http"`
 	PrivateKeyURL string   `yaml:"private_key_url"`
 	CounterURL    string   `yaml:"counter_url"`
 	APIKey        string   `yaml:"api_key"`

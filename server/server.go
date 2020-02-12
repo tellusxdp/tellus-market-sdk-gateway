@@ -1,6 +1,8 @@
 package server
 
 import (
+	"crypto/tls"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -8,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/acme/autocert"
 
 	"github.com/tellusxdp/tellus-market-sdk-gateway/config"
 	"github.com/tellusxdp/tellus-market-sdk-gateway/token"
@@ -38,6 +41,64 @@ func New(cfg *config.Config) (*Server, error) {
 	}
 	s.CounterChan = s.StartCountRequestLoop()
 	return s, nil
+}
+
+func (s *Server) ListenAndServe() error {
+
+	if s.Config.HTTP.TLS == nil {
+		s.Logger.Infof("Listen on %s", s.Config.HTTP.ListenAddress)
+		err := http.ListenAndServe(s.Config.HTTP.ListenAddress, s)
+		if err != nil {
+			return err
+		}
+	}
+
+	tlsConf := &tls.Config{
+		ClientAuth:               tls.NoClientCert,
+		NextProtos:               []string{"h2", "http/1.1"},
+		MinVersion:               tls.VersionTLS12,
+		PreferServerCipherSuites: true,
+		CipherSuites: []uint16{
+			tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			tls.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+			tls.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+			tls.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+			tls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+		},
+	}
+
+	if s.Config.HTTP.TLS.Autocert {
+		autocertManager := &autocert.Manager{
+			Prompt: autocert.AcceptTOS,
+		}
+		tlsConf.GetCertificate = autocertManager.GetCertificate
+		go func() {
+			err := http.ListenAndServe("0.0.0.0:80", autocertManager.HTTPHandler(nil))
+			if err != nil {
+				s.Logger.Warn(err)
+			}
+		}()
+	}
+
+	if s.Config.HTTP.TLS.Certificate != "" && s.Config.HTTP.TLS.Key != "" {
+		var err error
+		tlsConf.Certificates = make([]tls.Certificate, 1)
+		tlsConf.Certificates[0], err = tls.LoadX509KeyPair(s.Config.HTTP.TLS.Certificate, s.Config.HTTP.TLS.Key)
+		if err != nil {
+			return err
+		}
+	}
+
+	conn, err := net.Listen("tcp", s.Config.HTTP.ListenAddress)
+	if err != nil {
+		return err
+	}
+	ln := tls.NewListener(conn, tlsConf)
+
+	server := &http.Server{Addr: ":8000", Handler: s}
+	s.Logger.Infof("listening on %v with TLS", ln.Addr())
+	return server.Serve(ln)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
