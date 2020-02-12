@@ -19,28 +19,22 @@ const (
 )
 
 type Server struct {
-	PrivateKeyURL string
-	CounterURL    string
-	APIKey        string
-	Upstream      *url.URL
-	ToolID        string
-	Logger        *log.Entry
-	CounterChan   chan<- CountRequest
+	Config      *config.Config
+	Upstream    *url.URL
+	Logger      *log.Entry
+	CounterChan chan<- CountRequest
 }
 
 func New(cfg *config.Config) (*Server, error) {
-	u, err := url.Parse(cfg.Upstream)
+	u, err := url.Parse(cfg.Upstream.URL)
 	if err != nil {
 		return nil, err
 	}
 
 	s := &Server{
-		PrivateKeyURL: cfg.PrivateKeyURL,
-		CounterURL:    cfg.CounterURL,
-		APIKey:        cfg.APIKey,
-		Upstream:      u,
-		ToolID:        cfg.ToolID,
-		Logger:        log.WithField("tool_id", cfg.ToolID),
+		Config:   cfg,
+		Upstream: u,
+		Logger:   log.WithField("tool_id", cfg.ToolID),
 	}
 	s.CounterChan = s.StartCountRequestLoop()
 	return s, nil
@@ -80,14 +74,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jwtToken := authenticationHeader[1]
-	claim, err := token.ValidateToken(jwtToken, s.PrivateKeyURL)
+	claim, err := token.ValidateToken(jwtToken, s.Config.PrivateKeyURL)
 	if err != nil {
 		s.Logger.Warn(err.Error())
 		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid)")
 		return
 	}
 
-	if claim.ToolID != s.ToolID {
+	if claim.ToolID != s.Config.ToolID {
 		writeError(w, http.StatusForbidden, "Forbidden")
 		return
 	}
@@ -106,6 +100,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		req.URL.Host = s.Upstream.Host
 		req.Header.Set(HEADER_USER, claim.Subject)
 		req.Header.Set(HEADER_REQUESTID, requestID)
+		for k, v := range s.Config.Upstream.Headers {
+			req.Header.Set(k, v)
+		}
 	}
 
 	rp := &httputil.ReverseProxy{Director: director}
@@ -116,7 +113,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// 有効なレスポンス
 		go func() {
 			c := CountRequest{
-				ToolID:    s.ToolID,
+				ToolID:    s.Config.ToolID,
 				UserID:    claim.Subject,
 				Token:     jwtToken,
 				RequestID: requestID,

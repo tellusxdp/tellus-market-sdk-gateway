@@ -35,13 +35,13 @@ func (s *Server) StartCountRequestLoop() chan<- CountRequest {
 func (s *Server) count(r CountRequest) error {
 	body, _ := json.Marshal(&r)
 
-	req, err := http.NewRequest("POST", s.CounterURL, bytes.NewReader(body))
+	req, err := http.NewRequest("POST", s.Config.CounterURL, bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+s.APIKey)
+	req.Header.Set("Authorization", "Bearer "+s.Config.APIKey)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
