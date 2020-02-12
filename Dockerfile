@@ -17,4 +17,3 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /go/src/github.com/tellusxdp/tellus-market-sdk-gateway/main /opt/bin/market-gateway
 CMD ["/opt/bin/market-gateway", "--config", "/opt/market/config.yml"]
 
-EXPOSE 8000

@@ -68,12 +68,21 @@ func (s *Server) ListenAndServe() error {
 		},
 	}
 
-	if s.Config.HTTP.TLS.Autocert {
+	if s.Config.HTTP.TLS.Autocert.Enabled {
+		autocertCacheDir := "/tmp/autocert"
+
+		if s.Config.HTTP.TLS.Autocert.CacheDir != "" {
+			autocertCacheDir = s.Config.HTTP.TLS.Autocert.CacheDir
+		}
+
 		autocertManager := &autocert.Manager{
 			Prompt: autocert.AcceptTOS,
+			Cache:  autocert.DirCache(autocertCacheDir),
 		}
+
 		tlsConf.GetCertificate = autocertManager.GetCertificate
 		go func() {
+			s.Logger.Info("listening autocert on 0.0.0.0:80")
 			err := http.ListenAndServe("0.0.0.0:80", autocertManager.HTTPHandler(nil))
 			if err != nil {
 				s.Logger.Warn(err)
