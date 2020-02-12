@@ -6,12 +6,17 @@ import (
 	"github.com/go-yaml/yaml"
 )
 
+type Autocert struct {
+	Enabled  bool   `yaml:"enabled"`
+	CacheDir string `yaml:"cache_dir"`
+}
+
 type HTTP struct {
 	ListenAddress string `yaml:"listen_address"`
 	TLS           *struct {
-		Autocert    bool   `yaml:"autocert"`
-		Certificate string `yaml:"certificate,omitempty"`
-		Key         string `yaml:"key,omitempty"`
+		Autocert    *Autocert `yaml:"autocert,omitempty"`
+		Certificate string    `yaml:"certificate,omitempty"`
+		Key         string    `yaml:"key,omitempty"`
 	} `yaml:"tls,omitempty"`
 }
 
@@ -45,6 +50,10 @@ func FromFilepath(path string) (*Config, error) {
 
 	if c.Upstream.Headers == nil {
 		c.Upstream.Headers = map[string]string{}
+	}
+
+	if c.HTTP.TLS.Autocert == nil {
+		c.HTTP.TLS.Autocert = &Autocert{Enabled: false}
 	}
 
 	return c, err
