@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -42,8 +41,7 @@ func serve(c *cli.Context) error {
 		return err
 	}
 
-	log.Infof("Listen on %s", cfg.ListenAddress)
-	err = http.ListenAndServe(cfg.ListenAddress, s)
+	err = s.ListenAndServe()
 	if err != nil {
 		return err
 	}
