@@ -10,7 +10,7 @@ upstream:
   headers:
     X-Test-Header: hogetan
 
-provider_name: fukuyoshi-jiro
+provider_id: fukuyoshi-jiro
 tool_label: weather-api
 tool_id: 1_9ffc0bb13148c605795b5bc22143b7b00c30ad
 allowd_auth_types:
