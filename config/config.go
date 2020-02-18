@@ -26,14 +26,15 @@ type Upstream struct {
 }
 
 type Config struct {
-	HTTP          HTTP     `yaml:"http"`
-	PrivateKeyURL string   `yaml:"private_key_url"`
-	CounterURL    string   `yaml:"counter_url"`
-	APIKey        string   `yaml:"api_key"`
-	Upstream      Upstream `yaml:"upstream"`
-	ProviderName  string   `yaml:"provider_name"`
-	ToolLabel     string   `yaml:"tool_label"`
-	ToolID        string   `yaml:"tool_id"`
+	HTTP             HTTP     `yaml:"http"`
+	PrivateKeyURL    string   `yaml:"private_key_url"`
+	CounterURL       string   `yaml:"counter_url"`
+	APIKey           string   `yaml:"api_key"`
+	Upstream         Upstream `yaml:"upstream"`
+	ProviderName     string   `yaml:"provider_name"`
+	ToolLabel        string   `yaml:"tool_label"`
+	ToolID           string   `yaml:"tool_id"`
+	AllowedAuthTypes []string `yaml:"allowd_auth_types"`
 }
 
 func FromFilepath(path string) (*Config, error) {
@@ -54,6 +55,10 @@ func FromFilepath(path string) (*Config, error) {
 
 	if c.HTTP.TLS != nil && c.HTTP.TLS.Autocert == nil {
 		c.HTTP.TLS.Autocert = &Autocert{Enabled: false}
+	}
+
+	if c.AllowedAuthTypes == nil {
+		c.AllowedAuthTypes = []string{}
 	}
 
 	return c, err

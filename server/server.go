@@ -157,6 +157,18 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isAllowedAuthType := false
+	for _, t := range s.Config.AllowedAuthTypes {
+		if claim.AuthType == t {
+			isAllowedAuthType = true
+		}
+	}
+	if !isAllowedAuthType {
+		s.Logger.Debugf("Not allowed auth type %s", claim.AuthType)
+		writeError(w, http.StatusUnauthorized, "Unauthorized (not allowed auth type)")
+		return
+	}
+
 	requestID := r.Header.Get(HEADER_REQUESTID)
 	if requestID == "" {
 		u, err := uuid.NewRandom()
