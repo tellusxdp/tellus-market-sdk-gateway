@@ -1,0 +1,11 @@
+[Unit]
+Description=Tellus Market SDK Gateway
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/lib/gateway
+ExecStart=/usr/bin/tellus-market-sdk-gateway --config /etc/gateway/config.yml
+
+[Install]
+WantedBy=multi-user.target
