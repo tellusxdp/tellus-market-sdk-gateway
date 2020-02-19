@@ -1,0 +1,20 @@
+http:
+  listen_address: 0.0.0.0:443
+  tls:
+    autocert:
+      enabled: true
+      cache_dir: /var/lib/gateway/autocert
+
+private_key_url: https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys
+counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
+
+upstream: 
+  url: http://127.0.0.1:3000
+
+provider_name: providername
+tool_label: toollabel
+tool_id: toolid
+api_key: apikey
+allowd_auth_types:
+  - apikey
+  - password
