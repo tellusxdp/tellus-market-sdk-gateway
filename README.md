@@ -25,7 +25,7 @@ config.ymlにて以下の項目を設定します
 | tool_id           | 商品ID                    | 1_9ffc0bb13148c605795b5bc22143b7b00c30ad            |
 | api_key           | 集計用APIキー              | fa3a3293-d1be-41cf-9b6a-70d4d75c41ba             |
 | tool_label        | 商品ラベル                 | product01                                           |
-| allowd_auth_types | 許可認証方式                | ["password", "apikey"] |
+| allowed_auth_types | 許可認証方式                | ["password", "apikey"] |
 
 
 ### Example
@@ -50,7 +50,7 @@ api_key: b424a335-ea26-4ff1-bdf8-168469778499
 provider_id: acmeinc
 tool_label: owesome-api
 tool_id: 1_e849acf73765b19fd700af9374ab0fa2
-allowd_auth_types:
+allowed_auth_types:
   - apikey
   - password
 ```

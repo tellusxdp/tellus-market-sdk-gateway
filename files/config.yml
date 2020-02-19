@@ -15,6 +15,6 @@ provider_name: providername
 tool_label: toollabel
 tool_id: toolid
 api_key: apikey
-allowd_auth_types:
+allowed_auth_types:
   - apikey
   - password

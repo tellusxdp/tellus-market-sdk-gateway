@@ -34,7 +34,7 @@ type Config struct {
 	ProviderID	     string   `yaml:"provider_id"`
 	ToolLabel        string   `yaml:"tool_label"`
 	ToolID           string   `yaml:"tool_id"`
-	AllowedAuthTypes []string `yaml:"allowd_auth_types"`
+	AllowedAuthTypes []string `yaml:"allowed_auth_types"`
 }
 
 func FromFilepath(path string) (*Config, error) {
