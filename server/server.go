@@ -190,7 +190,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	rp := &httputil.ReverseProxy{Director: director}
+	reverseProxyErrorHandler := func(rw http.ResponseWriter, req *http.Request, err error) {
+		logger := s.Logger.WithField("request_id", requestID)
+		logger.Errorf("http: proxy error: %v", err)
+		rw.WriteHeader(http.StatusBadGateway)
+	}
+
+	rp := &httputil.ReverseProxy{Director: director, ErrorHandler: reverseProxyErrorHandler}
 	lw := NewLoggingResponseWriter(w)
 	rp.ServeHTTP(lw, r)
 
