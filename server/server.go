@@ -185,7 +185,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		req.Header.Set(HEADER_USER, claim.Subject)
 		req.Header.Set(HEADER_REQUESTID, requestID)
 		req.Header.Set("X-Forwarded-Host", req.Host)
-		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
 		for k, v := range s.Config.Upstream.Headers {
 			req.Header.Set(k, v)
 		}
