@@ -173,7 +173,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if requestID == "" {
 		u, err := uuid.NewRandom()
 		if err != nil {
-			log.Errorf("Cannot generate UUID: %s", err.Error())
+			s.Logger.Errorf("Cannot generate UUID: %s", err.Error())
 		}
 		requestID = u.String()
 	}
@@ -181,6 +181,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	director := func(req *http.Request) {
 		req.URL.Scheme = s.Upstream.Scheme
 		req.URL.Host = s.Upstream.Host
+		req.Host = s.Upstream.Host
 		req.Header.Set(HEADER_USER, claim.Subject)
 		req.Header.Set(HEADER_REQUESTID, requestID)
 		req.Header.Set("X-Forwarded-Host", req.Host)
