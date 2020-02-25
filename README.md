@@ -4,7 +4,7 @@ Market SDK Gateway
 
 ## 処理内容
 
-JWTのバリデーションを行い、認証に通れば、別のサーバにリバースプロキシする
+JWTのバリデーションを行い、認証に通れば、別のサーバにリバースプロキシする。
 
 ## 設定
 
@@ -68,18 +68,3 @@ vi config.yml
 go run main.go
 ```
 
-
-## Docker
-
-### Build Image
-
-```bash
-docker build -t tellusxdp/market-sdk-gateway:latest .
-docker push tellusxdp/market-sdk-gateway:latest
-```
-
-### Using Image
-
-```bash
-docker run -it -p 8000:8000 -v `pwd`:/opt/market tellusxdp/market-sdk-gateway:latest
-```
