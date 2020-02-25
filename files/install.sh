@@ -9,7 +9,7 @@
 
 set -e
 
-INSTALL_SH_URL="https://raw.githubusercontent.com/tellusxdp/tellus-market-sdk-gateway/master/install.sh"
+INSTALL_SH_URL="https://raw.githubusercontent.com/tellusxdp/tellus-market-sdk-gateway/master/files/install.sh"
 
 #when adding a tool to the list make sure to also add it's corresponding command further in the script
 unzip_tools_list=('unzip' '7z' 'busybox')
