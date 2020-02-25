@@ -2,6 +2,7 @@ package server
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -45,9 +46,13 @@ func New(cfg *config.Config) (*Server, error) {
 
 func (s *Server) ListenAndServe() error {
 
+	mux := http.NewServeMux()
+	mux.HandleFunc("/.tellus/config", s.configHandler)
+	mux.Handle("/", s)
+
 	if s.Config.HTTP.TLS == nil {
 		s.Logger.Infof("Listen on %s", s.Config.HTTP.ListenAddress)
-		err := http.ListenAndServe(s.Config.HTTP.ListenAddress, s)
+		err := http.ListenAndServe(s.Config.HTTP.ListenAddress, mux)
 		if err != nil {
 			return err
 		}
@@ -105,9 +110,29 @@ func (s *Server) ListenAndServe() error {
 	}
 	ln := tls.NewListener(conn, tlsConf)
 
-	server := &http.Server{Addr: ":8000", Handler: s}
+	server := &http.Server{Addr: ln.Addr().String(), Handler: mux}
 	s.Logger.Infof("listening on %v with TLS", ln.Addr())
 	return server.Serve(ln)
+}
+
+func (s *Server) configHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(200)
+
+	type configResponse struct {
+		ProviderID       string   `yaml:"provider_id"`
+		ToolLabel        string   `yaml:"tool_label"`
+		ToolID           string   `yaml:"tool_id"`
+		AllowedAuthTypes []string `yaml:"allowed_auth_types"`
+	}
+	resp := &configResponse{
+		ProviderID:       s.Config.ProviderID,
+		ToolLabel:        s.Config.ToolLabel,
+		ToolID:           s.Config.ToolID,
+		AllowedAuthTypes: s.Config.AllowedAuthTypes,
+	}
+
+	body, _ := json.Marshal(resp)
+	w.Write(body)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
