@@ -77,7 +77,7 @@ func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error
 		if !ok {
 			err := updatePublicKeys(publicKeysURL)
 			if err != nil {
-				return nil, fmt.Errorf("updatePunlicKeys() error: %s", err.Error())
+				return nil, fmt.Errorf("updatePublicKeys() error: %s", err.Error())
 			}
 
 			publicKeyStr, ok = publicKeys[kidStr]
