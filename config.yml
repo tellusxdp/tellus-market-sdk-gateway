@@ -1,8 +1,8 @@
 http:
   listen_address: 0.0.0.0:8000
 
-private_key_url: https://sdk.tellusxdp-staging.com/api/manager/v1/auth/public_keys
-counter_url: https://sdk.tellusxdp-staging.com/api/manager/v1/items/counts
+private_key_url: https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys
+counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
 api_key: 7b4d73b1-425b-4082-897c-ba3c81962272
 
 upstream: 
