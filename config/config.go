@@ -31,9 +31,7 @@ type Config struct {
 	CounterURL       string   `yaml:"counter_url"`
 	APIKey           string   `yaml:"api_key"`
 	Upstream         Upstream `yaml:"upstream"`
-	ProviderID	     string   `yaml:"provider_id"`
-	ToolLabel        string   `yaml:"tool_label"`
-	ToolID           string   `yaml:"tool_id"`
+	ProductID        string   `yaml:"product_id"`
 	AllowedAuthTypes []string `yaml:"allowed_auth_types"`
 }
 

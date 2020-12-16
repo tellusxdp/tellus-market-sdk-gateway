@@ -38,7 +38,7 @@ func New(cfg *config.Config) (*Server, error) {
 	s := &Server{
 		Config:   cfg,
 		Upstream: u,
-		Logger:   log.WithField("tool_id", cfg.ToolID),
+		Logger:   log.WithField("product_id", cfg.ProductID),
 	}
 	s.CounterChan = s.StartCountRequestLoop()
 	return s, nil
@@ -119,15 +119,11 @@ func (s *Server) configHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	type configResponse struct {
-		ProviderID       string   `yaml:"provider_id"`
-		ToolLabel        string   `yaml:"tool_label"`
-		ToolID           string   `yaml:"tool_id"`
+		ProductID        string   `yaml:"product_id"`
 		AllowedAuthTypes []string `yaml:"allowed_auth_types"`
 	}
 	resp := &configResponse{
-		ProviderID:       s.Config.ProviderID,
-		ToolLabel:        s.Config.ToolLabel,
-		ToolID:           s.Config.ToolID,
+		ProductID:        s.Config.ProductID,
 		AllowedAuthTypes: s.Config.AllowedAuthTypes,
 	}
 
@@ -176,9 +172,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if claim.ToolID != s.Config.ToolID {
-		s.Logger.Debugf("Invalid tool id %s", claim.ToolID)
-		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid tool)")
+	if claim.ProductID != s.Config.ProductID {
+		s.Logger.Debugf("Invalid product id %s", claim.ProductID)
+		writeError(w, http.StatusUnauthorized, "Unauthorized (invalid product)")
 		return
 	}
 
@@ -229,7 +225,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// 有効なレスポンス
 		go func() {
 			c := CountRequest{
-				ToolID:    s.Config.ToolID,
+				ProductID: s.Config.ProductID,
 				UserID:    claim.Subject,
 				Token:     jwtToken,
 				RequestID: requestID,

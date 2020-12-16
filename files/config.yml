@@ -11,10 +11,8 @@ counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
 upstream: 
   url: http://127.0.0.1:3000
 
-provider_name: providername
-tool_label: toollabel
-tool_id: toolid
-api_key: apikey
+product_id: 商品ID
+api_key: 集計用APIキー
 allowed_auth_types:
   - apikey
   - password
