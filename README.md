@@ -24,12 +24,7 @@ config.ymlにて以下の項目を設定します
 | upstream          | 認証後に接続するサーバ             | https://www.example.com/                            |
 | api_key           | 集計用APIキー              | fa3a3293-d1be-41cf-9b6a-70d4d75c41ba             |
 | product_id     | 商品ID                    | 366bbedd-8bc3-4374-9253-cd07f763f2bc                          |
-| provider_id ※1   | プロバイダ名                    | provider-a                                           |
-| tool_id ※1       | 商品識別コード                    | 1_9ffc0bb13148c605795b5bc22143b7b00c30ad            |
-| tool_label ※1    | 商品ラベル                 | product01                                           |
 | allowed_auth_types | 許可認証方式                | ["password", "apikey"] |
-
-※1 廃止予定の設定項目です。2020/12/23以降はproduct_idの設定を推奨します。
 
 ### Example
 
