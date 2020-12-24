@@ -9,7 +9,7 @@ import (
 )
 
 type CountRequest struct {
-	ToolID    string `json:"tool_id"`
+	ProductID string `json:"product_id"`
 	UserID    string `json:"user_id"`
 	Token     string `json:"token"`
 	RequestID string `json:"request_id"`

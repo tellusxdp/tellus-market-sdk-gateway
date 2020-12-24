@@ -20,13 +20,11 @@ config.ymlにて以下の項目を設定します
 | upsteram.url                | 認証後に接続するサーバ             | https://www.example.com/         |
 | upstream.headers            | プロキシ先に付与するリクエストヘッダ | {"Authorization": "Bearer token"} |
 | private_key_url | JWTを検証する公開鍵をダウンロードするURL | https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys |
+| counter_url | APIリクエストのメータリング情報を登録するURL | https://sdk.tellusxdp.com/api/manager/v1/items/counts |
 | upstream          | 認証後に接続するサーバ             | https://www.example.com/                            |
-| provider_id     | プロバイダ名                    | provider-a                                           |
-| tool_id           | 商品ID                    | 1_9ffc0bb13148c605795b5bc22143b7b00c30ad            |
 | api_key           | 集計用APIキー              | fa3a3293-d1be-41cf-9b6a-70d4d75c41ba             |
-| tool_label        | 商品ラベル                 | product01                                           |
+| product_id     | 商品ID                    | 366bbedd-8bc3-4374-9253-cd07f763f2bc                          |
 | allowed_auth_types | 許可認証方式                | ["password", "apikey"] |
-
 
 ### Example
 
@@ -45,11 +43,9 @@ upstream:
 
 private_key_url: https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys
 counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
-api_key: b424a335-ea26-4ff1-bdf8-168469778499
 
-provider_id: acmeinc
-tool_label: owesome-api
-tool_id: 1_e849acf73765b19fd700af9374ab0fa2
+api_key: fa3a3293-d1be-41cf-9b6a-70d4d75c41ba
+product_id: 366bbedd-8bc3-4374-9253-cd07f763f2bc
 allowed_auth_types:
   - apikey
   - password

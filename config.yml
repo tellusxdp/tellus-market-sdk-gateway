@@ -3,16 +3,14 @@ http:
 
 private_key_url: https://sdk.tellusxdp.com/api/manager/v1/auth/public_keys
 counter_url: https://sdk.tellusxdp.com/api/manager/v1/items/counts
-api_key: 7b4d73b1-425b-4082-897c-ba3c81962272
 
 upstream: 
   url: https://www.sakura.ad.jp
   headers:
     X-Test-Header: hogetan
 
-provider_id: fukuyoshi-jiro
-tool_label: weather-api
-tool_id: 1_9ffc0bb13148c605795b5bc22143b7b00c30ad
+product_id: 9dc372e2-5819-4953-a696-5a599e760dc3
+api_key: 7b4d73b1-425b-4082-897c-ba3c81962272
 allowed_auth_types:
   - apikey
   - password

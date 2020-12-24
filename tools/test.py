@@ -3,8 +3,8 @@ import requests
 
 def get_tool_token(token):
     resp = requests.post(
-        "https://sdk.tellusxdp.com/api/manager/v1/auth/api_access_token/token",
-        json={"provider_id": "fukuyoshi-jiro", "tool_label": "weather-api"},
+        "https://sdk.tellusxdp.com/api/manager/v2/auth/token/",
+        json={"product_id": "2f59c093-4e80-419a-8584-dcee6589d3d2"},
         headers={"Authorization": "Bearer {}".format(token)}
     )
     resp.raise_for_status()

@@ -116,12 +116,12 @@ func ValidateToken(tokenString string, publicKeysURL string) (*JWTPayload, error
 	}
 
 	t := &JWTPayload{
-		Audience: claims["aud"].(string),
-		ID:       claims["jti"].(string),
-		Issuer:   claims["iss"].(string),
-		Subject:  claims["sub"].(string),
-		ToolID:   claims["tool_id"].(string),
-		AuthType: claims["auth_type"].(string),
+		Audience:  claims["aud"].(string),
+		ID:        claims["jti"].(string),
+		Issuer:    claims["iss"].(string),
+		Subject:   claims["sub"].(string),
+		ProductID: claims["product_id"].(string),
+		AuthType:  claims["auth_type"].(string),
 	}
 	return t, nil
 }
