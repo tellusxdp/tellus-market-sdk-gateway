@@ -62,8 +62,9 @@ case $OS_type in
 esac
 
 #download and unzip
-download_link="https://github.com/tellusxdp/tellus-market-sdk-gateway/releases/download/latest/tellus-market-sdk-gateway-$OS-$OS_type.zip"
+version=1.1.0
 zipfile="tellus-market-sdk-gateway-$OS-$OS_type.zip"
+download_link="https://github.com/tellusxdp/tellus-market-sdk-gateway/releases/download/$version/$zipfile"
 
 curl -L -O $download_link
 unzip_dir="tmp_unzip_dir_for_tellus-market-sdk-gateway"
